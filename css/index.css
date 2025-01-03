@@ -15,7 +15,7 @@ body {
 
 #guitar-neck {
     display: block;
-    width: 2000px; /* Ajuste de acordo com o tamanho do braço */
+    width: 1000px; /* Ajuste de acordo com o tamanho do braço */
     height: auto;
 }
 
