@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+.guitar-neck-container {
+    position: relative;
+    overflow-x: auto;
+}
+
+#guitar-neck {
+    display: block;
+    width: 2000px; /* Ajuste de acordo com o tamanho do braço */
+    height: auto;
+}
+
+#canvas-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none; /* Permite clicar apenas na imagem */
+}
+
+#chord-name {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
