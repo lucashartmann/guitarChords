@@ -10,12 +10,14 @@ body {
 
 .guitar-neck-container {
     position: relative;
+    cursor: pointer;
     overflow-x: auto;
+    width: fit-content;
 }
 
 #guitar-neck {
     display: block;
-    width: 1000px; /* Ajuste de acordo com o tamanho do braço */
+    max-width: 100%;
     height: auto;
 }
 
@@ -23,7 +25,9 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    pointer-events: none; /* Permite clicar apenas na imagem */
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
 }
 
 #chord-name {
