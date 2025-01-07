@@ -10,7 +10,6 @@ body {
 
 .guitar-neck-container {
     position: relative;
-    cursor: pointer;
     width: 700px;
     height: auto;
 }
@@ -19,15 +18,17 @@ body {
     display: block;
     width: 100%;
     height: auto;
+    pointer-events: none;  /* Desabilita interação com a imagem */
 }
 
 #canvas-overlay {
     position: absolute;
     top: 0;
-    left: 0;
-    pointer-events: none;
-    width: calc(100% - 210px);
+    left: 50px;
+    width: 490px;
     height: 100%;
+    pointer-events: auto;  /* Permite interação com o canvas */
+    cursor: pointer;
 }
 
 #chord-name {
