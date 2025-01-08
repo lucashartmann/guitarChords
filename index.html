@@ -7,12 +7,16 @@
     <link rel="stylesheet" href="css/index.css"">
 </head>
 <body>
-    <h1>Guitar Chord Finder</h1>
+    <div class="title-container">
+        <h1>Guitar Chord Finder</h1>
+        <p id="chord-name">Select positions to find the chord</p2>
+    </div>
     <div class="fretboard" id="fretboard"></div>
-    <p id="chord-name">Select positions to find the chord</p>
-    <div class="guitar-neck-container">
-        <img src="imagens/braço-guitarra.png" alt="Braço da Guitarra" id="guitar-neck">
-        <canvas id="canvas-overlay"></canvas>
+    <div class="container">
+        <div class="guitar-neck-container">
+            <img id="guitar-neck" src="imagens/braço-guitarra.png" alt="Braço da guitarra">
+            <canvas id="canvas-overlay"></canvas>
+        </div>
     </div>
     <script src="js/index.js"></script>
 </body>

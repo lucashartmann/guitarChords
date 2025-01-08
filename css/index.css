@@ -6,15 +6,25 @@ body {
     flex-direction: column;
     align-items: center;
     background-color: #f0f0f0;
-    overflow-x: auto;
-    min-width: 320px;
+   min-width: 320px;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .guitar-neck-container {
+    margin-top: 150px;
     position: relative;
     width: 1500px;
     height: auto;
-    margin: 20px;
+    min-width: 1500px; /* Garante largura mínima */
+    margin-left: 200px; /* Adiciona espaço à esquerda */
+    margin-right: 200px; /* Adiciona espaço à direita */
 }
 
 #guitar-neck {
@@ -35,20 +45,58 @@ body {
 }
 
 #chord-name {
-    margin-top: 50px;
-    font-size: 30px;
+    position: fixed;
+    top: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 34px;
     font-weight: bold;
     text-align: center;
-    width: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000;
 }
 
+/* Media query para dispositivos móveis */
 @media screen and (max-width: 1500px) {
-    .guitar-neck-container {
-        margin: 10px;
-    }
-    
-    body {
-        overflow-x: auto;
+    .container {
+        padding: 10px;
+        justify-content: flex-start; /* Alinha ao início para permitir rolagem completa */
+        overflow-x: scroll;
         -webkit-overflow-scrolling: touch;
     }
+    
+    .guitar-neck-container {
+        margin: 150px 200px; /* Mantém as margens mesmo em telas menores */
+    }
+}
+
+h1 {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.2em;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.title-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    background-color: #f0f0f0;
+    padding: 10px 0;
+    z-index: 1000;
 }
