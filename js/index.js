@@ -34,10 +34,10 @@ const fretPositions = [
     0.874, // Casa 16 
     0.91, // Casa 17 
     0.94, // Casa 18 
-    0.974, // Casa 19
-    0.99, // Casa 20
-    1.0, // Casa 21
-    1.1 // Casa 22
+    0.974 // Casa 19
+    // 0.99, // Casa 20
+    // 1.0, // Casa 21
+    // 1.1 // Casa 22
 ];
 
 // Posições das cordas por região do braço
@@ -83,7 +83,7 @@ const stringPositionsByRegion = {
         0.74,  // E (1ª corda)
         0.66,  // B
         0.58,  // G
-        0.56,  // D
+        0.50,  // D
         0.42,  // A
         0.35   // E (6ª corda)
     ]
