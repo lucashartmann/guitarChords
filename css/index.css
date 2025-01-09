@@ -52,16 +52,14 @@ body {
     font-size: 34px;
     font-weight: bold;
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.9);
     padding: 10px;
-    border-radius: 5px;
     z-index: 1000;
 }
 
 /* Media query para dispositivos móveis */
 @media screen and (max-width: 1500px) {
     .container {
-        padding: 10px;
+        margin-top: 100px;
         justify-content: flex-start; /* Alinha ao início para permitir rolagem completa */
         overflow-x: scroll;
         -webkit-overflow-scrolling: touch;
@@ -69,6 +67,13 @@ body {
     
     .guitar-neck-container {
         margin: 150px 200px; /* Mantém as margens mesmo em telas menores */
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    #chord-name {
+        top: 120px;
+        font-size: 30px;
     }
 }
 

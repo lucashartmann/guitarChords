@@ -5,12 +5,12 @@ const selectedPositions = new Map();
 let selectedPoints = [];
 
 const stringNotes = {
-    1: ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E'],  // Primeira corda (mais fina)
-    2: ['B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
-    3: ['G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G'],
-    4: ['D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D'],
-    5: ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A'],
-    6: ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E']   // Sexta corda (mais grossa)
+    1: ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D'],  // Primeira corda (mais fina)
+    2: ['B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A'],
+    3: ['G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F'],
+    4: ['D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C'],
+    5: ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G'],
+    6: ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D']   // Sexta corda (mais grossa)
 };
 
 // Posições das casas no braço (da direita para a esquerda)
@@ -283,6 +283,25 @@ function redrawAllPoints() {
     });
 }
 
+function formatChordName(root, type) {
+    // Mapeamento de notas equivalentes
+    const equivalentNotes = {
+        'A#': 'Bb',
+        'C#': 'Db',
+        'D#': 'Eb',
+        'F#': 'Gb',
+        'G#': 'Ab'
+    };
+
+    // Se a nota tem um equivalente, mostra ambas
+    if (equivalentNotes[root]) {
+        return `${root} ou ${equivalentNotes[root]}${type}`;
+    }
+    
+    // Se não tem equivalente, retorna normal
+    return `${root}${type}`;
+}
+
 function identifyChord() {
     console.log(selectedPositions);
     console.log('[DEBUG] Iniciando identificação do acorde...');
@@ -313,10 +332,9 @@ function identifyChord() {
         return;
     }
     // Caso contrário, montar o nome do acorde normalmente
-    const chordName = `${rootNote}${chordType}`;
-    const finalChordName = isMinor ? `${chordName}m` : chordName;
-    document.getElementById('chord-name').textContent = finalChordName;
-    console.log('[INFO] Nome do acorde identificado:', finalChordName);
+    const chordName = formatChordName(rootNote, chordType);
+    document.getElementById('chord-name').textContent = chordName;
+    console.log('[INFO] Nome do acorde identificado:', chordName);
 }
 
 function parsePositions(selectedPositions) {
@@ -348,6 +366,9 @@ function findBassNote(positions) {
     if (notesOnStrings[2] === 'D' && notesOnStrings[3] === 'A' && notesOnStrings[1] === 'F') {
         return 'D';  // Raiz do acorde Dm
     }
+    if (notesOnStrings[2] === 'D' && notesOnStrings[3] === 'A' && notesOnStrings[1] === 'F#') {
+        return 'D';  // Raiz do acorde D
+    }
     // Padrão do Am (se presente nas posições)
     if (notesOnStrings[3] === 'A' && notesOnStrings[4] === 'E' && notesOnStrings[2] === 'C') {
         return 'A';  // Raiz do acorde Am
@@ -356,9 +377,19 @@ function findBassNote(positions) {
         (notesOnStrings[3] === 'C' || notesOnStrings[2] === 'D#')) {
         return 'C';
     }
-    if (notesOnStrings[6] === 'E' || 
+    if (notesOnStrings[6] === 'E' ||
         (notesOnStrings[5] === 'B' && notesOnStrings[4] === 'E')) {
         return 'E';
+    }
+    if ((notesOnStrings[6] === 'B' && notesOnStrings[5] === 'E') ||
+        (notesOnStrings[5] === 'E' && notesOnStrings[4] === 'B')) {
+        return 'E';  // Raiz do acorde Em
+    }
+    if (notesOnStrings[1] === 'F#' && notesOnStrings[2] === 'C' && notesOnStrings[3] === 'A') {
+        return 'D';  // Nota fundamental do D7
+    }
+    if (notesOnStrings[2] === 'C#' && notesOnStrings[3] === 'G#' && notesOnStrings[4] === 'E') {
+        return 'A';  // Nota fundamental do A7M
     }
     // Caso não seja um dos acordes definidos, procura pela nota mais grave
     const potentialRoot = sortedPositions.find(pos => pos.string === 6) ||  // Prioriza a corda 6
@@ -382,6 +413,15 @@ function getUniqueNotes(positions) {
 function identifyMinorChord(positions) {
     // Verificar se o acorde é menor baseado em notas
     const notes = positions.map(pos => pos.note);
+    if (notes.includes('D') && notes.includes('F#') && notes.includes('A')) {
+        return false; // Não é menor
+    }
+    if (notes.includes('E') && notes.includes('G') && notes.includes('B')) {
+        return true;
+    }
+    if (notes.includes('F#') && notes.includes('A') && notes.includes('C')) {
+        return false;
+    }
     // Um acorde menor geralmente tem a terça menor
     // Por exemplo: se tiver C, E♭, G, então é menor
     // Vamos verificar se temos um padrão de terça menor
@@ -408,7 +448,7 @@ function calculateIntervalsFromRoot(rootNote, notes) {
                 return interval;
             }
         }
-        console.log(`Note: ${note} not found`); 
+        console.log(`Note: ${note} not found`);
         return null; // Retorna null se a nota não for encontrada
     }).filter(interval => interval !== null); // Filtra notas não encontradas
 }
@@ -427,14 +467,12 @@ function determineChordType(intervals) {
     const hasSixth = intervals.includes(9);
     if (hasRoot) {
         if (hasMajorThird && hasPerfectFifth) {
-            //if (rootNote === 'F') return 'F';
             if (hasSixth) return '6';
             if (hasMajorSeventh) return '7';
             if (hasMinorSeventh) return 'm7';
             return " ";
         }
         if (hasMinorThird && hasPerfectFifth) {
-            //if (rootNote === 'F') return 'Fm';
             if (hasMinorSeventh) return 'm7';
             return 'm';
         }
@@ -446,6 +484,18 @@ function determineChordType(intervals) {
         if (hasPerfectFifth && !hasMajorThird && !hasMinorThird) return '5';
         if (hasMajorThird && !hasPerfectFifth) return " ";
         if (hasMinorThird && !hasPerfectFifth) return 'm';
+        if (intervals.includes(5) && hasSixth) {
+            return ''; // Padrão de acorde maior
+        }
+        if (intervals.includes(5)) {
+            return '5(9)';
+        }
+    }
+    if (hasMajorThird && hasPerfectFifth && hasMinorSeventh) {
+        return '7';
+    }
+    if (hasMajorThird && hasPerfectFifth && hasMajorSeventh) {
+        return '7M';
     }
     console.log('[DEBUG] Acorde não identificado. Intervalos:', intervals);
     return 'Acorde não reconhecido';
@@ -465,7 +515,7 @@ function findRootNote(notes) {
                 }
             }
         }
-        return lowest; 
+        return lowest;
     }, null);
 }
 
