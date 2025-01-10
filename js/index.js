@@ -466,6 +466,9 @@ function determineChordType(intervals) {
     const hasMajorSeventh = intervals.includes(11);
     const hasSixth = intervals.includes(9);
     if (hasRoot) {
+        if (hasMajorThird && hasMinorSeventh) {
+            return '7';
+        }
         if (hasMajorThird && hasPerfectFifth) {
             if (hasSixth) return '6';
             if (hasMajorSeventh) return '7';
@@ -490,6 +493,7 @@ function determineChordType(intervals) {
         if (intervals.includes(5)) {
             return '5(9)';
         }
+        
     }
     if (hasMajorThird && hasPerfectFifth && hasMinorSeventh) {
         return '7';

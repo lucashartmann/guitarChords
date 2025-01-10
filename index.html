@@ -3,12 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guitar Chord Finder</title>
+    <title data-i18n="title">Identificador de Acordes</title>
     <link rel="stylesheet" href="css/index.css"">
+    <link rel="stylesheet" href="css/themes.css">
 </head>
 <body>
-        <h1>Guitar Chord Finder</h1>
-        <p id="chord-name">Select positions to find the chord</p2>
+    <div class="controls">
+        <select id="language-selector" onchange="setLanguage(this.value)">
+            <option value="pt">Português</option>
+            <option value="en">English</option>
+        </select>
+        
+        <button onclick="toggleTheme()" id="theme-toggle">
+            🌓
+        </button>
+    </div>
+    <h1 data-i18n="title">Identificador de Acordes</h1>
+    <p id="chord-name" data-i18n="chordNotRecognized">Acorde não reconhecido</p>
     <div class="fretboard" id="fretboard"></div>
     <div class="container">
         <div class="guitar-neck-container">
@@ -17,5 +28,7 @@
         </div>
     </div>
     <script src="js/index.js"></script>
+    <script src="js/translations.js"></script>
+    <script src="js/theme.js"></script>
 </body>
 </html>

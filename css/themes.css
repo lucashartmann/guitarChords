@@ -1,0 +1,24 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --chord-color: #333333;
+    --border-color: #cccccc;
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --chord-color: #e0e0e0;
+    --border-color: #404040;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#chord-name {
+    color: var(--chord-color);
+}
+
