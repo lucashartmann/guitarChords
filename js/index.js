@@ -284,7 +284,6 @@ function redrawAllPoints() {
 }
 
 function formatChordName(root, type) {
-    // Mapeamento de notas equivalentes
     const equivalentNotes = {
         'A#': 'Bb',
         'C#': 'Db',
@@ -292,14 +291,19 @@ function formatChordName(root, type) {
         'F#': 'Gb',
         'G#': 'Ab'
     };
-
-    // Se a nota tem um equivalente, mostra ambas
-    if (equivalentNotes[root]) {
-        return `${root} ou ${equivalentNotes[root]}${type}`;
+    // Se for um power chord
+    if (type === '5 ou m') {
+        if (equivalentNotes[root]) {
+            return `${root} ${t('or')} ${equivalentNotes[root]}5 ${t('or')} ${root}m`;
+        }
+        return `${root}5 ${t('or')} ${root}m`;
     }
-    
-    // Se não tem equivalente, retorna normal
-    return `${root}${type}`;
+    // Para acordes normais
+    if (equivalentNotes[root]) {
+        return type ? `${root} ${t('or')} ${equivalentNotes[root]}${type}` :
+            `${root} ${t('or')} ${equivalentNotes[root]}`;
+    }
+    return `${root}${type}`;  // Retorna apenas a nota se não tiver tipo
 }
 
 function identifyChord() {
@@ -313,7 +317,7 @@ function identifyChord() {
     console.log('[DEBUG] Notas únicas:', notes);
     if (!bassNote) {
         console.log('[ERROR] Nota mais grave não encontrada');
-        document.getElementById('chord-name').textContent = 'Acorde não reconhecido';
+        document.getElementById('chord-name').textContent = t('chordNotRecognized');
         return;
     }
     const rootNote = bassNote || notes[0]; // Use a nota mais grave ou a primeira nota
@@ -327,8 +331,8 @@ function identifyChord() {
     const isMinor = identifyMinorChord(positions);
     console.log('[DEBUG] É um acorde menor?', isMinor);
     // Se o tipo do acorde for "Acorde não reconhecido", usar essa mensagem diretamente
-    if (chordType === 'Acorde não reconhecido') {
-        document.getElementById('chord-name').textContent = 'Acorde não reconhecido';
+    if (chordType === 'not_recognized') {
+        document.getElementById('chord-name').textContent = t('chordNotRecognized');
         return;
     }
     // Caso contrário, montar o nome do acorde normalmente
@@ -390,6 +394,9 @@ function findBassNote(positions) {
     }
     if (notesOnStrings[2] === 'C#' && notesOnStrings[3] === 'G#' && notesOnStrings[4] === 'E') {
         return 'A';  // Nota fundamental do A7M
+    }
+    if (notesOnStrings[4] === 'E' && notesOnStrings[3] === 'A' && notesOnStrings[2] === 'C#') {
+        return 'A';  // Nota fundamental do A maior
     }
     // Caso não seja um dos acordes definidos, procura pela nota mais grave
     const potentialRoot = sortedPositions.find(pos => pos.string === 6) ||  // Prioriza a corda 6
@@ -465,6 +472,12 @@ function determineChordType(intervals) {
     const hasMinorSeventh = intervals.includes(10);
     const hasMajorSeventh = intervals.includes(11);
     const hasSixth = intervals.includes(9);
+    const sortedIntervals = [...intervals].sort((a, b) => a - b);
+    // Verifica power chord (apenas fundamental e quinta)
+    if (intervals.length === 2 &&
+        sortedIntervals.toString() === [0, 7].toString()) {
+        return '5 ou m';  // Retorna formato especial para power chords
+    }
     if (hasRoot) {
         if (hasMajorThird && hasMinorSeventh) {
             return '7';
@@ -493,7 +506,7 @@ function determineChordType(intervals) {
         if (intervals.includes(5)) {
             return '5(9)';
         }
-        
+
     }
     if (hasMajorThird && hasPerfectFifth && hasMinorSeventh) {
         return '7';
@@ -502,7 +515,7 @@ function determineChordType(intervals) {
         return '7M';
     }
     console.log('[DEBUG] Acorde não identificado. Intervalos:', intervals);
-    return 'Acorde não reconhecido';
+    return 'not_recognized';
 }
 
 function findRootNote(notes) {
@@ -523,10 +536,8 @@ function findRootNote(notes) {
     }, null);
 }
 
-
 function formatRootNote(bassNote) {
     console.log('[DEBUG] Formatando nota fundamental...');
     const accidental = bassNote.includes('#') ? '#' : bassNote.includes('b') ? 'b' : '';
     return bassNote[0] + accidental;
 }
-
