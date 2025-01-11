@@ -479,6 +479,9 @@ function determineChordType(intervals) {
         return '5 ou m';  // Retorna formato especial para power chords
     }
     if (hasRoot) {
+        if (hasMajorThird && hasMinorSeventh && hasNinth) {
+            return '9';
+        }
         if (hasMajorThird && hasMinorSeventh) {
             return '7';
         }
@@ -492,9 +495,6 @@ function determineChordType(intervals) {
             if (hasMinorSeventh) return 'm7';
             return 'm';
         }
-        if (hasMajorThird && hasMinorSeventh && hasNinth) {
-            return '9';
-        }
         if (hasMinorThird && hasDimFifth) return "m";
         if (hasMajorThird && hasAugFifth) return " ";
         if (hasPerfectFifth && !hasMajorThird && !hasMinorThird) return '5';
@@ -506,7 +506,6 @@ function determineChordType(intervals) {
         if (intervals.includes(5)) {
             return '5(9)';
         }
-
     }
     if (hasMajorThird && hasPerfectFifth && hasMinorSeventh) {
         return '7';
