@@ -145,12 +145,13 @@ function handleClick(event) {
     }
     // Se o clique for muito à direita (na mão da guitarra), ignora
     if (canvasX > 450) { // Limite máximo
-        console.log('Click on guitar hand, ignoring');
+        // console.log('Click on guitar hand, ignoring');
         return;
     }
     // Normaliza as coordenadas considerando apenas a área útil do braço
     const xPercent = (canvasX - neckStartX) / neckWidth;
     const yPercent = canvasY / canvas.height;
+    /* 
     console.log('Click raw:', {
         x, y,
         canvasX, canvasY,
@@ -163,6 +164,7 @@ function handleClick(event) {
         rectHeight: rect.height,
         yPercent
     });
+    */
     let fret = -1;
     let minDistance = Infinity;
     let distances = [];
@@ -170,13 +172,13 @@ function handleClick(event) {
     for (let i = 1; i < fretPositions.length; i++) {
         const distance = Math.abs(xPercent - (1 - fretPositions[i]));
         distances.push({ fret: i, position: fretPositions[i], distance });
-        console.log(`Checking fret ${i}: position ${fretPositions[i]}, distance ${distance}`);
+        // console.log(`Checking fret ${i}: position ${fretPositions[i]}, distance ${distance}`);
         if (distance < minDistance && distance < 0.06) {
             minDistance = distance;
             fret = i;
         }
     }
-    console.log('All distances:', distances.sort((a, b) => a.distance - b.distance));
+    // console.log('All distances:', distances.sort((a, b) => a.distance - b.distance));
     // Se nenhuma casa foi encontrada dentro do limite, encontre a mais próxima
     if (fret === -1) {
         for (let i = 0; i < fretPositions.length; i++) {
@@ -194,13 +196,12 @@ function handleClick(event) {
     for (let i = 1; i <= 6; i++) {  // Mudamos de 0 para 1 e <= 6
         const stringPos = getStringPosition(i, fret);
         const distance = Math.abs(yPercent - stringPos);
-
-        console.log(`Checking string ${i}:`, {
+        /* console.log(`Checking string ${i}:`, {
             stringPos,
             distance,
             yPercent
         });
-
+        */
         if (distance < minStringDistance) {
             minStringDistance = distance;
             string = i;
@@ -210,11 +211,13 @@ function handleClick(event) {
     if (minStringDistance > 0.1) { // Ajuste esse valor conforme necessário
         string = -1;
     }
+    /*
     console.log('String detection:', {
         string,
         minStringDistance,
         yPercent
     });
+    */
     // Verifica se o clique está dentro de uma margem aceitável
     if (fret >= 0 && fret <= 22 && string >= 1 && string <= 6) {
         const positionKey = `${string}-${fret}`;
@@ -228,7 +231,7 @@ function handleClick(event) {
         redrawAllPoints();
         identifyChord();
     }
-    console.log('xPercent:', xPercent, 'yPercent:', yPercent, 'Detected fret:', fret, 'Detected string:', string);
+    // console.log('xPercent:', xPercent, 'yPercent:', yPercent, 'Detected fret:', fret, 'Detected string:', string);
 }
 
 function drawPoint(fret, string) {
@@ -259,14 +262,16 @@ function drawPoint(fret, string) {
         ctx.fillStyle = 'white';
         ctx.fill();
         ctx.closePath();
-        console.log('Drawing point:', {
+        /*
+         console.log('Drawing point:', {
             fret: point.fret,
             string: point.string,
             x: xPos,
             y: yPos,
             size,
             canvasWidth: canvas.width,
-        });
+        }); 
+        */
     }
 }
 
@@ -307,29 +312,29 @@ function formatChordName(root, type) {
 }
 
 function identifyChord() {
-    console.log(selectedPositions);
-    console.log('[DEBUG] Iniciando identificação do acorde...');
+    // console.log(selectedPositions);
+    // console.log('[DEBUG] Iniciando identificação do acorde...');
     const positions = parsePositions(selectedPositions);
-    console.log('[DEBUG] Posições parseadas:', positions);
+    // console.log('[DEBUG] Posições parseadas:', positions);
     const bassNote = findBassNote(positions);
-    console.log('[DEBUG] Nota mais grave (baixo):', bassNote);
+    // console.log('[DEBUG] Nota mais grave (baixo):', bassNote);
     const notes = getUniqueNotes(positions);
-    console.log('[DEBUG] Notas únicas:', notes);
+    // console.log('[DEBUG] Notas únicas:', notes);
     if (!bassNote) {
-        console.log('[ERROR] Nota mais grave não encontrada');
+        // console.log('[ERROR] Nota mais grave não encontrada');
         document.getElementById('chord-name').textContent = t('chordNotRecognized');
         return;
     }
     const rootNote = bassNote || notes[0]; // Use a nota mais grave ou a primeira nota
-    console.log('[DEBUG] Nota fundamental:', rootNote);
+    // console.log('[DEBUG] Nota fundamental:', rootNote);
     const intervals = calculateIntervalsFromRoot(rootNote, notes);
-    console.log('[DEBUG] Intervalos calculados:', intervals);
+    // console.log('[DEBUG] Intervalos calculados:', intervals);
     // Determinar o tipo do acorde
     const chordType = determineChordType(intervals);
-    console.log('[DEBUG] Tipo do acorde:', chordType);
+    // console.log('[DEBUG] Tipo do acorde:', chordType);
     // Verificar se o acorde é menor
     const isMinor = identifyMinorChord(positions);
-    console.log('[DEBUG] É um acorde menor?', isMinor);
+    // console.log('[DEBUG] É um acorde menor?', isMinor);
     // Se o tipo do acorde for "Acorde não reconhecido", usar essa mensagem diretamente
     if (chordType === 'not_recognized') {
         document.getElementById('chord-name').textContent = t('chordNotRecognized');
@@ -338,17 +343,17 @@ function identifyChord() {
     // Caso contrário, montar o nome do acorde normalmente
     const chordName = formatChordName(rootNote, chordType);
     document.getElementById('chord-name').textContent = chordName;
-    console.log('[INFO] Nome do acorde identificado:', chordName);
+    // console.log('[INFO] Nome do acorde identificado:', chordName);
 }
 
 function parsePositions(selectedPositions) {
-    console.log('[DEBUG] Parsing posições selecionadas...');
+    // console.log('[DEBUG] Parsing posições selecionadas...');
     return Array.from(selectedPositions.entries())
         .map(([key, value]) => {
             // Divide a chave da posição para extrair string e fret
             const [string, fret] = key.split('-').map(Number);
             if (isNaN(string) || isNaN(fret)) {
-                console.log(`[ERROR] Posição inválida: ${key}`);
+                // console.log(`[ERROR] Posição inválida: ${key}`);
                 return null; // Retorna null em caso de dados inválidos
             }
             return { string, fret, note: value.note };
@@ -358,7 +363,7 @@ function parsePositions(selectedPositions) {
 }
 
 function findBassNote(positions) {
-    console.log('[DEBUG] Encontrando nota mais grave...');
+    // console.log('[DEBUG] Encontrando nota mais grave...');
     // Ordena as posições por corda (da mais grossa para a mais fina)
     const sortedPositions = positions.sort((a, b) => b.string - a.string);
     // Mapeia as notas para as cordas
@@ -413,7 +418,7 @@ function findBassNote(positions) {
 }
 
 function getUniqueNotes(positions) {
-    console.log('[DEBUG] Obtendo notas únicas...');
+    // console.log('[DEBUG] Obtendo notas únicas...');
     return [...new Set(positions.map(p => p.note))];
 }
 
@@ -442,7 +447,7 @@ function identifyMinorChord(positions) {
 
 function calculateIntervalsFromRoot(rootNote, notes) {
     const rootIndex = stringNotes[1].indexOf(rootNote); // Acessando a primeira corda
-    console.log('Root Note:', rootNote, 'Root Index:', rootIndex); // Log da nota raiz e seu índice
+    // console.log('Root Note:', rootNote, 'Root Index:', rootIndex); // Log da nota raiz e seu índice
     return notes.map(note => {
         // Encontrar a corda correspondente para cada nota
         let noteIndex = -1;
@@ -451,17 +456,17 @@ function calculateIntervalsFromRoot(rootNote, notes) {
             if (noteIndex !== -1) {
                 // Se a nota foi encontrada, calcular o intervalo
                 const interval = (noteIndex - rootIndex + 12) % 12; // Ajuste para intervalos positivos
-                console.log(`Note: ${note}, Note Index: ${noteIndex}, Interval: ${interval}`); // Log da nota, seu índice e o intervalo
+                // console.log(`Note: ${note}, Note Index: ${noteIndex}, Interval: ${interval}`); // Log da nota, seu índice e o intervalo
                 return interval;
             }
         }
-        console.log(`Note: ${note} not found`);
+        // console.log(`Note: ${note} not found`);
         return null; // Retorna null se a nota não for encontrada
     }).filter(interval => interval !== null); // Filtra notas não encontradas
 }
 
 function determineChordType(intervals) {
-    console.log('[DEBUG] Determinando tipo do acorde...');
+    // console.log('[DEBUG] Determinando tipo do acorde...');
     const hasRoot = intervals.includes(0);
     const hasNinth = intervals.includes(2);
     const hasMinorThird = intervals.includes(3);
@@ -513,12 +518,12 @@ function determineChordType(intervals) {
     if (hasMajorThird && hasPerfectFifth && hasMajorSeventh) {
         return '7M';
     }
-    console.log('[DEBUG] Acorde não identificado. Intervalos:', intervals);
+    // console.log('[DEBUG] Acorde não identificado. Intervalos:', intervals);
     return 'not_recognized';
 }
 
 function findRootNote(notes) {
-    console.log('[DEBUG] Encontrando nota mais grave...');
+    // console.log('[DEBUG] Encontrando nota mais grave...');
     return notes.reduce((lowest, note) => {
         let lowestIndex = null;
         for (let string = 1; string <= 6; string++) {
@@ -536,7 +541,7 @@ function findRootNote(notes) {
 }
 
 function formatRootNote(bassNote) {
-    console.log('[DEBUG] Formatando nota fundamental...');
+    // console.log('[DEBUG] Formatando nota fundamental...');
     const accidental = bassNote.includes('#') ? '#' : bassNote.includes('b') ? 'b' : '';
     return bassNote[0] + accidental;
 }

@@ -22,9 +22,9 @@ body {
     position: relative;
     width: 1500px;
     height: auto;
-    min-width: 1500px; /* Garante largura mínima */
-    margin-left: 200px; /* Adiciona espaço à esquerda */
-    margin-right: 200px; /* Adiciona espaço à direita */
+    min-width: 1500px; 
+    margin-left: 200px; 
+    margin-right: 200px; 
 }
 
 #guitar-neck {
@@ -56,17 +56,16 @@ body {
     z-index: 1000;
 }
 
-/* Media query para dispositivos móveis */
 @media screen and (max-width: 1500px) {
     .container {
         margin-top: 100px;
-        justify-content: flex-start; /* Alinha ao início para permitir rolagem completa */
+        justify-content: flex-start; 
         overflow-x: scroll;
         -webkit-overflow-scrolling: touch;
     }
     
     .guitar-neck-container {
-        margin: 150px 200px; /* Mantém as margens mesmo em telas menores */
+        margin: 150px 200px; 
         margin-left: 0px;
         margin-right: 0px;
     }

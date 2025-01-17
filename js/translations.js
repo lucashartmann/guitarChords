@@ -28,7 +28,6 @@ function updateTranslations() {
         const key = element.getAttribute('data-i18n');
         element.textContent = t(key);
     });
-
     // Atualiza o título da página
     document.title = t('title');
 } 
