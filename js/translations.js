@@ -1,4 +1,4 @@
-const translations = {
+const traducoes = {
     pt: {
         chordNotRecognized: 'Acorde não reconhecido',
         or: 'ou',
@@ -11,23 +11,21 @@ const translations = {
     }
 };
 
-let currentLanguage = 'pt'; 
+let idiomaAtual = 'pt'; 
 
-function setLanguage(lang) {
-    currentLanguage = lang;
-    updateTranslations();
+function setIdioma(lang) {
+    idiomaAtual = lang;
+    atualizaTraducoes();
 }
 
 function t(key) {
-    return translations[currentLanguage][key] || key;
+    return traducoes[idiomaAtual][key] || key;
 }
 
-function updateTranslations() {
-    // Atualiza todos os elementos com data-i18n
+function atualizaTraducoes() {
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
         element.textContent = t(key);
     });
-    // Atualiza o título da página
     document.title = t('title');
 } 

@@ -1,13 +1,13 @@
-function setTheme(theme) {
+function setTema(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
 }
 
-function toggleTheme() {
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
+function mudarTema() {
+    const temaAtual = localStorage.getItem('theme') || 'light';
+    const novoTema = temaAtual === 'light' ? 'dark' : 'light';
+    setTema(novoTema);
 }
 
-const savedTheme = localStorage.getItem('theme') || 'light';
-setTheme(savedTheme); 
+const temaSalvo = localStorage.getItem('theme') || 'light';
+setTema(temaSalvo); 
