@@ -137,13 +137,13 @@ function handleClick(event) {
         return;
     }
     if (canvasX > 450) { 
-        // console.log('Click on guitar hand, ignoring');
+        // // console.log('Click on guitar hand, ignoring');
         return;
     }
     const xPercent = (canvasX - neckStartX) / neckWidth;
     const yPercent = canvasY / canvas.height;
     /* 
-    console.log('Click raw:', {
+    // console.log('Click raw:', {
         x, y,
         canvasX, canvasY,
         neckStartX,
@@ -162,13 +162,13 @@ function handleClick(event) {
     for (let i = 1; i < posicoesCasas.length; i++) {
         const distancia = Math.abs(xPercent - (1 - posicoesCasas[i]));
         distancias.push({ fret: i, posicao: posicoesCasas[i], distancia });
-        // console.log(`Checking fret ${i}: posicao ${posicoesCasas[i]}, distancia ${distancia}`);
+        // // console.log(`Checking fret ${i}: posicao ${posicoesCasas[i]}, distancia ${distancia}`);
         if (distancia < minDistancia && distancia < 0.06) {
             minDistancia = distancia;
             fret = i;
         }
     }
-    // console.log('All distancias:', distancias.sort((a, b) => a.distancia - b.distancia));
+    // // console.log('All distancias:', distancias.sort((a, b) => a.distancia - b.distancia));
     if (fret === -1) {
         for (let i = 0; i < posicoesCasas.length; i++) {
             const distancia = Math.abs(xPercent - (1 - posicoesCasas[i]));
@@ -183,7 +183,7 @@ function handleClick(event) {
     for (let i = 1; i <= 6; i++) {  
         const cordaPos = getPosicaoCorda(i, fret);
         const distancia = Math.abs(yPercent - cordaPos);
-        /* console.log(`Checking corda ${i}:`, {
+        /* // console.log(`Checking corda ${i}:`, {
             cordaPos,
             distancia,
             yPercent
@@ -198,7 +198,7 @@ function handleClick(event) {
         corda = -1;
     }
     /*
-    console.log('corda detection:', {
+    // console.log('corda detection:', {
         corda,
         minDistanciaCorda,
         yPercent
@@ -216,7 +216,7 @@ function handleClick(event) {
         redesenharTodosPontos();
         identificaAcorde();
     }
-    // console.log('xPercent:', xPercent, 'yPercent:', yPercent, 'Detected fret:', fret, 'Detected corda:', corda);
+    // // console.log('xPercent:', xPercent, 'yPercent:', yPercent, 'Detected fret:', fret, 'Detected corda:', corda);
 }
 
 function desenharPonto(fret, corda) {
@@ -239,7 +239,7 @@ function desenharPonto(fret, corda) {
         ctx.fill();
         ctx.closePath();
         /*
-         console.log('Drawing point:', {
+         // console.log('Drawing point:', {
             fret: point.fret,
             corda: point.corda,
             x: xPos,
@@ -287,43 +287,43 @@ function formatarNomeAcorde(root, type) {
 }
 
 function identificaAcorde() {
-    console.log(posicoesSelecionadas);
-    console.log('[DEBUG] Iniciando identificação do acorde...');
+    // console.log(posicoesSelecionadas);
+    // console.log('[DEBUG] Iniciando identificação do acorde...');
     const posicoes = parsePosicoes(posicoesSelecionadas);
-    console.log('[DEBUG] Posições parseadas:', posicoes);
+    // console.log('[DEBUG] Posições parseadas:', posicoes);
     const bassNota = findBassNota(posicoes);
-    console.log('[DEBUG] Nota mais grave (baixo):', bassNota);
+    // console.log('[DEBUG] Nota mais grave (baixo):', bassNota);
     const notas = getCordasUnicas(posicoes);
-    console.log('[DEBUG] Notas únicas:', notas);
+    // console.log('[DEBUG] Notas únicas:', notas);
     if (!bassNota) {
-        console.log('[ERROR] Nota mais grave não encontrada');
+        // console.log('[ERROR] Nota mais grave não encontrada');
         document.getElementById('chord-name').textContent = t('chordNotRecognized');
         return;
     }
     const notaRaiz = bassNota || notas[0]; // Use a nota mais grave ou a primeira nota
-    console.log('[DEBUG] Nota fundamental:', notaRaiz);
+    // console.log('[DEBUG] Nota fundamental:', notaRaiz);
     const intervalos = calculaintervalosPorRaiz(notaRaiz, notas);
-    console.log('[DEBUG] intervalos calculados:', intervalos);
+    // console.log('[DEBUG] intervalos calculados:', intervalos);
     const tipoAcorde = determinaTipoAcorde(intervalos);
-    console.log('[DEBUG] Tipo do acorde:', tipoAcorde);
+    // console.log('[DEBUG] Tipo do acorde:', tipoAcorde);
     const isMenor = identificaAcordeMenor(posicoes);
-    console.log('[DEBUG] É um acorde menor?', isMenor);
+    // console.log('[DEBUG] É um acorde menor?', isMenor);
     if (tipoAcorde === 'not_recognized') {
         document.getElementById('chord-name').textContent = t('chordNotRecognized');
         return;
     }
     const nomeAcorde = formatarNomeAcorde(notaRaiz, tipoAcorde);
     document.getElementById('chord-name').textContent = nomeAcorde;
-    console.log('[INFO] Nome do acorde identificado:', nomeAcorde);
+    // console.log('[INFO] Nome do acorde identificado:', nomeAcorde);
 }
 
 function parsePosicoes(posicoesSelecionadas) {
-    console.log('[DEBUG] Parsing posições selecionadas...');
+    // console.log('[DEBUG] Parsing posições selecionadas...');
     return Array.from(posicoesSelecionadas.entries())
         .map(([key, value]) => {
             const [corda, fret] = key.split('-').map(Number);
             if (isNaN(corda) || isNaN(fret)) {
-                // console.log(`[ERROR] Posição inválida: ${key}`);
+                // // console.log(`[ERROR] Posição inválida: ${key}`);
                 return null; 
             }
             return { corda, fret, nota: value.nota };
@@ -333,7 +333,7 @@ function parsePosicoes(posicoesSelecionadas) {
 }
 
 function findBassNota(posicoes) {
-    console.log('[DEBUG] Encontrando nota mais grave...');
+    // console.log('[DEBUG] Encontrando nota mais grave...');
     const sortedPosicoes = posicoes.sort((a, b) => b.corda - a.corda);
     const notaNaCorda = {};
     posicoes.forEach(pos => {
@@ -386,7 +386,7 @@ function findBassNota(posicoes) {
 }
 
 function getCordasUnicas(posicoes) {
-    console.log('[DEBUG] Obtendo notas únicas...');
+    // console.log('[DEBUG] Obtendo notas únicas...');
     return [...new Set(posicoes.map(p => p.nota))];
 }
 
@@ -412,24 +412,24 @@ function identificaAcordeMenor(posicoes) {
 
 function calculaintervalosPorRaiz(notaRaiz, notas) {
     const indexRaiz = notasCorda[1].indexOf(notaRaiz); 
-    console.log('Root nota:', notaRaiz, 'Root Index:', indexRaiz); 
+    // console.log('Root nota:', notaRaiz, 'Root Index:', indexRaiz); 
     return notas.map(nota => {
         let indexNota = -1;
         for (let corda = 1; corda <= 6; corda++) {
             indexNota = notasCorda[corda].indexOf(nota);
             if (indexNota !== -1) {
                 const intervalo = (indexNota - indexRaiz + 12) % 12; 
-                console.log(`nota: ${nota}, nota Index: ${indexNota}, intervalo: ${intervalo}`); 
+                // console.log(`nota: ${nota}, nota Index: ${indexNota}, intervalo: ${intervalo}`); 
                 return intervalo;
             }
         }
-        console.log(`nota: ${nota} not found`);
+        // console.log(`nota: ${nota} not found`);
         return null; 
     }).filter(intervalo => intervalo !== null); 
 }
 
 function determinaTipoAcorde(intervalos) {
-    console.log('[DEBUG] Determinando tipo do acorde');
+    // console.log('[DEBUG] Determinando tipo do acorde');
     const temRaiz = intervalos.includes(0);
     const temNona = intervalos.includes(2);
     const temTercaMenor = intervalos.includes(3);
@@ -481,12 +481,12 @@ function determinaTipoAcorde(intervalos) {
     if (temTercaMaior && temQuintaPerfeita && temSetimaMaior) {
         return '7M';
     }
-    console.log('[DEBUG] Acorde não identificado. intervalos:', intervalos);
+    // console.log('[DEBUG] Acorde não identificado. intervalos:', intervalos);
     return 'not_recognized';
 }
 
 function encontraNotaRaiz(notas) {
-    console.log('[DEBUG] Encontrando nota mais grave');
+    // console.log('[DEBUG] Encontrando nota mais grave');
     return notas.reduce((lowest, nota) => {
         let lowestIndex = null;
         for (let corda = 1; corda <= 6; corda++) {
@@ -503,7 +503,7 @@ function encontraNotaRaiz(notas) {
 }
 
 function formatNotaRaiz(bassNota) {
-    console.log('[DEBUG] Formatando nota fundamental...');
+    // console.log('[DEBUG] Formatando nota fundamental...');
     const acidental = bassNota.includes('#') ? '#' : bassNota.includes('b') ? 'b' : '';
     return bassNota[0] + acidental;
 }
